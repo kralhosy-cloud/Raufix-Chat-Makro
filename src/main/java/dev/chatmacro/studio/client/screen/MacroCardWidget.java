@@ -11,7 +11,6 @@ import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
-import net.minecraft.client.input.AbstractInput;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.text.Text;
 
@@ -187,9 +186,15 @@ public final class MacroCardWidget extends ClickableWidget {
         return true;
     }
 
-    /** Enter on a focused card edits it - the same action as a middle click. */
+    /**
+     * Enter/Space on a focused card edits it - the same action as a right click.
+     *
+     * <p>Hooked on {@code onClick(Click, boolean)} rather than the old
+     * {@code onPress()}: 1.21.11's {@link net.minecraft.client.gui.widget.ClickableWidget}
+     * no longer declares a no-argument press hook.</p>
+     */
     @Override
-    public void onPress(AbstractInput input) {
+    public void onClick(Click click, boolean doubled) {
         if (macro != null) actions.onEdit(macro);
     }
 
