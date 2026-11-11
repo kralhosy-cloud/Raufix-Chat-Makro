@@ -11,13 +11,15 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write   # to publish the jar to the ci-artifacts branch
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Show what we are building
         run: |
