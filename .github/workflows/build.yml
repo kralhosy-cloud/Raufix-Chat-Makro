@@ -1,0 +1,57 @@
+name: build
+
+# Builds the real mod jar on GitHub's runners, where Fabric's Maven, Mojang's
+# libraries and the Gradle distribution are reachable. This is the build that
+# produces an installable jar; the local scripts in scripts/ can only produce the
+# platform-free core (see JAR.md).
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Show what we are building
+        run: |
+          grep -E '^(minecraft_version|loader_version|yarn_mappings|fabric_version|loom_version)' gradle.properties
+
+      - name: Resolve the Fabric coordinates for this Minecraft version
+        run: python3 scripts/resolve-fabric-versions.py
+
+      - name: Show the resolved coordinates
+        run: |
+          grep -E '^(minecraft_version|loader_version|yarn_mappings|fabric_version|loom_version)' gradle.properties
+          cat gradle/wrapper/gradle-wrapper.properties
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Compile with Loom (this is where client.** is compiled for real)
+        run: ./gradlew --no-daemon build
+
+      - name: List produced artifacts
+        if: always()
+        run: |
+          echo '--- build/libs'
+          ls -la build/libs || true
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chat-macro-studio-jars
+          path: |
+            build/libs/*.jar
+            build/reports/**
+          if-no-files-found: warn
