@@ -3,9 +3,11 @@ package dev.chatmacro.studio.client.screen;
 import dev.chatmacro.studio.ModInfo;
 import dev.chatmacro.studio.client.ProfileTransfer;
 import dev.chatmacro.studio.theme.ThemeTokens;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.input.KeyInput;
 import net.minecraft.text.Text;
 
 import java.util.List;
@@ -100,7 +102,9 @@ public final class BundlePickerScreen extends Screen {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(Click click, boolean doubled) {
+        double mouseX = click.x();
+        double mouseY = click.y();
         int pad = 14;
         int listTop = pad + 16;
         int index = (int) ((mouseY - listTop + scroll) / ROW_HEIGHT);
@@ -108,7 +112,7 @@ public final class BundlePickerScreen extends Screen {
             selected = index;
             return true;
         }
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(click, doubled);
     }
 
     @Override
@@ -119,10 +123,11 @@ public final class BundlePickerScreen extends Screen {
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+    public boolean keyPressed(KeyInput input) {
+        int keyCode = input.key();
         if (keyCode == 264 && selected < names.size() - 1) { selected++; return true; }
         if (keyCode == 265 && selected > 0) { selected--; return true; }
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return super.keyPressed(input);
     }
 
     @Override

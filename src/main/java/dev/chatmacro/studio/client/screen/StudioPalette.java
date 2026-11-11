@@ -43,7 +43,7 @@ public final class StudioPalette {
             ctx.fill(x + w - c, y + h - c, x + w - 1, y + h - 1, fill);
         }
         if (border != 0) {
-            ctx.drawBorder(x, y, w, h, border);
+            outline(ctx, x, y, w, h, border);
             // Trim the border out of the chamfered corners.
             ctx.fill(x, y, x + 1, y + 1, outside);
             ctx.fill(x + w - 1, y, x + w, y + 1, outside);
@@ -60,7 +60,23 @@ public final class StudioPalette {
 
     /** Focus ring: a 1px accent outline drawn just outside the control. */
     public static void focusRing(DrawContext ctx, int x, int y, int w, int h, int color) {
-        ctx.drawBorder(x - 1, y - 1, w + 2, h + 2, color);
+        outline(ctx, x - 1, y - 1, w + 2, h + 2, color);
+    }
+
+    /**
+     * A 1px rectangle outline.
+     *
+     * <p>1.21.11 removed {@code DrawContext#drawBorder}, so the four edges are
+     * filled directly. Kept in one place because the whole palette depends on
+     * it being pixel-exact: an off-by-one here shows up as a seam between the
+     * border and the fill it is supposed to hug.</p>
+     */
+    public static void outline(DrawContext ctx, int x, int y, int w, int h, int color) {
+        if (w <= 0 || h <= 0) return;
+        ctx.fill(x, y, x + w, y + 1, color);                 // top
+        ctx.fill(x, y + h - 1, x + w, y + h, color);         // bottom
+        ctx.fill(x, y + 1, x + 1, y + h - 1, color);         // left
+        ctx.fill(x + w - 1, y + 1, x + w, y + h - 1, color); // right
     }
 
     /** A status pill: filled capsule plus centred label. */

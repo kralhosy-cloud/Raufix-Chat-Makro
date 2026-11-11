@@ -5,6 +5,7 @@ import dev.chatmacro.studio.theme.ThemeTokens;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.input.KeyInput;
 import net.minecraft.text.Text;
 
 /**
@@ -100,12 +101,12 @@ public final class ConfirmDialogScreen extends Screen {
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (keyCode == 256) {                     // Escape
+    public boolean keyPressed(KeyInput input) {
+        if (input.key() == 256) {                 // Escape
             close();
             return true;
         }
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return super.keyPressed(input);
     }
 
     /** Tiny greedy wrapper; the dialog only ever shows a sentence or two. */

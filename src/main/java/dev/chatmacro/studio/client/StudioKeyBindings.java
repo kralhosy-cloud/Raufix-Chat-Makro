@@ -4,6 +4,7 @@ import dev.chatmacro.studio.ModInfo;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 
 /**
@@ -22,7 +23,16 @@ import org.lwjgl.glfw.GLFW;
 public final class StudioKeyBindings {
 
     /** Controls-screen category; localised by both language files. */
-    public static final String CATEGORY = ModInfo.tr("key.category");
+    public static final String CATEGORY_KEY = ModInfo.tr("key.category");
+
+    /**
+     * 1.21.11 replaced the category <em>string</em> with a
+     * {@link KeyBinding.Category} record wrapping an {@link Identifier}. The
+     * identifier doubles as the translation key for the category label, so the
+     * localised key is wrapped as-is.
+     */
+    public static final KeyBinding.Category CATEGORY =
+            KeyBinding.Category.create(Identifier.of(ModInfo.MOD_ID, "studio"));
 
     // Both fields are public non-final statics, which the project's Semgrep
     // ruleset flags. Accepted deliberately: this is the documented Fabric key
@@ -38,6 +48,7 @@ public final class StudioKeyBindings {
     }
 
     public static void register() {
+        // KeyBinding's constructor now takes a translation key, not a Text.
         openStudio = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 ModInfo.tr("key.openStudio"),
                 InputUtil.Type.KEYSYM,

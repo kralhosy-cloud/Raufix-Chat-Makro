@@ -83,7 +83,7 @@ jobs:
             net.minecraft.client.gui.screen.ChatScreen \
             'net.minecraft.client.option.KeyBinding$Category' \
             net.minecraft.command.CommandRegistryAccess \
-            net.minecraft.client.network.ClientPlayNetworkHandler \
+            net.minecraft.client.network.ServerInfo \
             net.minecraft.client.MinecraftClient ; do
             { echo "########## $cls"; javap -classpath "$jar" "$cls" 2>&1; echo; } >> "$out"
           done

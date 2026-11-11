@@ -4,6 +4,7 @@ import dev.chatmacro.studio.model.SessionInfo;
 import dev.chatmacro.studio.model.SessionKind;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ChatScreen;
+import net.minecraft.client.network.ServerInfo;
 import net.minecraft.server.integrated.IntegratedServer;
 
 /**
@@ -33,7 +34,10 @@ public final class SessionBridge {
         String address = "";
         String worldName = "";
 
-        if (client.isConnectedToRealms()) {
+        // 1.21.11 dropped MinecraftClient#isConnectedToRealms(); the flag now
+        // lives on the ServerInfo of the current connection.
+        ServerInfo currentServer = client.getCurrentServerEntry();
+        if (currentServer != null && currentServer.isRealm()) {
             kind = SessionKind.REALM;
         } else if (client.isInSingleplayer()) {
             kind = SessionKind.SINGLEPLAYER;

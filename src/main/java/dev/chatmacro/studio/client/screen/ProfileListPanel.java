@@ -137,7 +137,8 @@ public final class ProfileListPanel {
         ctx.fill(trackX, thumbY, trackX + 2, thumbY + thumbHeight, tokens.accent());
     }
 
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    /** Called from the screen with the already-decoded click position. */
+    public boolean mouseClicked(double mouseX, double mouseY) {
         if (mouseX < x || mouseX > x + width || mouseY < y || mouseY > y + height) return false;
         if (hoveredRow >= 0 && hoveredRow < profiles.size()) {
             listener.onProfileChosen(profiles.get(hoveredRow));

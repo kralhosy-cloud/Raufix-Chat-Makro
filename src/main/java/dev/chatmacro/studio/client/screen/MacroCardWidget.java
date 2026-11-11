@@ -7,8 +7,11 @@ import dev.chatmacro.studio.theme.Colors;
 import dev.chatmacro.studio.theme.ThemeTokens;
 import dev.chatmacro.studio.ui.Animation;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
+import net.minecraft.client.gui.screen.narration.NarrationPart;
+import net.minecraft.client.input.AbstractInput;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.text.Text;
 
@@ -162,8 +165,17 @@ public final class MacroCardWidget extends ClickableWidget {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (macro == null || !isVisible() || !isMouseOver(mouseX, mouseY)) return false;
+    public boolean mouseClicked(Click click, boolean doubled) {
+        double mouseX = click.x();
+        double mouseY = click.y();
+        int button = click.button();
+        if (macro == null || !this.visible || !isMouseOver(mouseX, mouseY)) return false;
+        // hoveredToggle is recomputed by renderWidget; recompute here as well so
+        // a click that lands before the first frame still hits the right box.
+        int toggleX = getX() + getWidth() - TOGGLE_WIDTH - 8;
+        int toggleY = getY() + (HEIGHT - TOGGLE_HEIGHT) / 2 + 6;
+        hoveredToggle = mouseX >= toggleX && mouseX <= toggleX + TOGGLE_WIDTH
+                && mouseY >= toggleY && mouseY <= toggleY + TOGGLE_HEIGHT;
         if (hoveredToggle) {
             actions.onToggle(macro, !macro.enabled());
             return true;
@@ -177,14 +189,14 @@ public final class MacroCardWidget extends ClickableWidget {
 
     /** Enter on a focused card edits it - the same action as a middle click. */
     @Override
-    public void onPress() {
+    public void onPress(AbstractInput input) {
         if (macro != null) actions.onEdit(macro);
     }
 
     @Override
     protected void appendClickableNarrations(NarrationMessageBuilder builder) {
         if (macro == null) return;
-        builder.addDefault();
+        builder.put(NarrationPart.TITLE, getMessage());
     }
 /** Swaps the palette live, so a theme change does not rebuild the screen. */
     public void setTokens(ThemeTokens next) {

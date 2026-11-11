@@ -9,7 +9,7 @@ import dev.chatmacro.studio.model.Profile;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-import net.minecraft.command.CommandBuildContext;
+import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.text.Text;
 
 /**
@@ -26,7 +26,7 @@ public final class StudioCommands {
 
     public static void register() {
         ClientCommandRegistrationCallback.EVENT.register(
-                (CommandDispatcher<FabricClientCommandSource> dispatcher, CommandBuildContext registryAccess) ->
+                (CommandDispatcher<FabricClientCommandSource> dispatcher, CommandRegistryAccess registryAccess) ->
                         dispatcher.register(ClientCommandManager.literal(ModInfo.COMMAND_ROOT)
                                 .then(ClientCommandManager.literal(ModInfo.COMMAND_UI)
                                         .executes(ctx -> openScreen(ctx.getSource())))

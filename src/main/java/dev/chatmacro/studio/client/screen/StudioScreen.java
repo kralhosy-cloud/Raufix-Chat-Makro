@@ -18,8 +18,10 @@ import dev.chatmacro.studio.theme.ThemeMode;
 import dev.chatmacro.studio.theme.ThemeTokens;
 import dev.chatmacro.studio.ui.Animation;
 import dev.chatmacro.studio.ui.VirtualList;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.input.KeyInput;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -546,10 +548,12 @@ public final class StudioScreen extends Screen {
     // ----------------------------------------------------------------- input
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(Click click, boolean doubled) {
+        double mouseX = click.x();
+        double mouseY = click.y();
         if ((settingsOpen || compactMenuOpen) && themeButton != null) {
             for (ButtonWidget widget : settingButtons()) {
-                if (widget.mouseClicked(mouseX, mouseY, button)) return true;
+                if (widget.mouseClicked(click, doubled)) return true;
             }
             boolean insidePopup = isOver(mouseX, mouseY, this.width - 222, HEADER_HEIGHT,
                     216, this.height - HEADER_HEIGHT - FOOTER_HEIGHT);
@@ -558,11 +562,11 @@ public final class StudioScreen extends Screen {
                 compactMenuOpen = false;
             }
         }
-        if (profileColumnWidth() > 0 && profileList.mouseClicked(mouseX, mouseY, button)) return true;
+        if (profileColumnWidth() > 0 && profileList.mouseClicked(mouseX, mouseY)) return true;
         for (MacroCardWidget card : cards) {
-            if (card.mouseClicked(mouseX, mouseY, button)) return true;
+            if (card.mouseClicked(click, doubled)) return true;
         }
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(click, doubled);
     }
 
     @Override
@@ -601,11 +605,12 @@ public final class StudioScreen extends Screen {
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+    public boolean keyPressed(KeyInput input) {
+        int keyCode = input.key();
         // The game only queues key-bind presses while no screen has focus, so
         // the emergency stop is matched here as well: it must work everywhere.
         if (StudioKeyBindings.emergencyStop != null
-                && StudioKeyBindings.emergencyStop.matchesKey(keyCode, scanCode)) {
+                && StudioKeyBindings.emergencyStop.matchesKey(input)) {
             studio.stopRun("run.stoppedByUser");
             status("run.stopped");
             return true;
@@ -624,7 +629,7 @@ public final class StudioScreen extends Screen {
             profileList.moveSelection(-1);
             return true;
         }
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return super.keyPressed(input);
     }
 
     /** Escape closes the screen; it never silently stops a running session. */
