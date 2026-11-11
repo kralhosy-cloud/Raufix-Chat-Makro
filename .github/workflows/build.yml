@@ -50,6 +50,28 @@ jobs:
           set -o pipefail   # a failing gradlew must fail the step, even through tee
           ./gradlew --no-daemon --stacktrace build 2>&1 | tee gradle-build.log
 
+      # Read the REAL yarn-mapped API from the jar Loom just downloaded, instead
+      # of guessing signatures. Output goes into the build log we publish.
+      - name: Probe the mapped Minecraft API (javap)
+        if: always()
+        shell: bash
+        run: |
+          set -u
+          out=api-probe.log
+          jar=$(ls .gradle/loom-cache/minecraftMaven/net/minecraft/minecraft-*/*/*-merged.jar 2>/dev/null | head -1)
+          echo "jar=$jar" | tee "$out"
+          if [ -z "${jar:-}" ]; then
+            find .gradle -name '*minecraft*jar' | head -20 | tee -a "$out"; exit 0
+          fi
+          unzip -l "$jar" | grep -c class | tee -a "$out"
+          for cls in net/minecraft/client/gui/Screen net/minecraft/client/gui/Element \
+                     net/minecraft/client/gui/widget/ClickableWidget net/minecraft/client/gui/DrawContext \
+                     net/minecraft/client/option/KeyBinding net/minecraft/command/CommandRegistryAccess; do
+            { echo "===== $cls"; javap -classpath "$jar" "${cls//\//.}" 2>&1 | head -60; } >> "$out"
+          done
+          echo '--- inner types of KeyBinding/screen input ---' >> "$out"
+          grep -E '^\s+(public|protected).*\(' "$out" | grep -iE 'mouseClicked|keyPressed|drawBorder|Category|DrawContext' | head -40 >> "$out"
+
       - name: Summarise the Gradle log in the job summary
         if: always()
         run: |
@@ -87,6 +109,7 @@ jobs:
           rm -rf "$PUB"
           mkdir -p "$PUB"
           cp gradle-build.log "$PUB"/ 2>/dev/null || echo '(no gradle log)' > "$PUB/gradle-build.log"
+          cp api-probe.log "$PUB"/ 2>/dev/null || true
           [ -d build/libs ] && find build/libs -name '*.jar' -exec cp {} "$PUB"/ \; || true
           ( cd "$PUB" && sha256sum * > SHA256SUMS.txt 2>/dev/null || true )
           echo "--- publishing:"
