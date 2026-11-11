@@ -72,13 +72,17 @@ jobs:
             exit 0
           fi
           for cls in \
-            net.minecraft.client.gui.Screen \
-            net.minecraft.client.gui.Element \
-            net.minecraft.client.gui.ParentElement \
-            net.minecraft.client.gui.widget.ClickableWidget \
-            net.minecraft.client.gui.DrawContext \
-            net.minecraft.client.option.KeyBinding \
-            net.minecraft.command.CommandBuildContext \
+            net.minecraft.client.gui.Click \
+            net.minecraft.client.input.KeyInput \
+            net.minecraft.client.input.CharInput \
+            net.minecraft.client.input.MouseInput \
+            net.minecraft.client.gui.screen.Screen \
+            net.minecraft.client.gui.screen.narration.NarrationMessageBuilder \
+            net.minecraft.client.gui.widget.ButtonWidget \
+            net.minecraft.client.gui.widget.TextFieldWidget \
+            net.minecraft.client.gui.screen.ChatScreen \
+            'net.minecraft.client.option.KeyBinding$Category' \
+            net.minecraft.command.CommandRegistryAccess \
             net.minecraft.client.network.ClientPlayNetworkHandler \
             net.minecraft.client.MinecraftClient ; do
             { echo "########## $cls"; javap -classpath "$jar" "$cls" 2>&1; echo; } >> "$out"
