@@ -1,0 +1,207 @@
+Downloading https://services.gradle.org/distributions/gradle-9.9.0-bin.zip
+............10%.............20%.............30%.............40%.............50%.............60%.............70%............80%.............90%.............100%
+
+Welcome to Gradle 9.9.0!
+
+Here are the highlights of this release:
+ - Performance improvements for Kotlin DSL compilation
+ - Test filtering for non-method JUnit Platform tests
+ - Wrapper settings preserved on upgrade
+ - Predefined groups in the Problems API
+
+For more details see https://docs.gradle.org/9.9.0/release-notes.html
+
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.9.0/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :
+Fabric Loom: 1.20.0-alpha.27
+
+Cannot remap modifiers because it does not exist in any of the targets [] or their parents.
+
+> Task :compileJava
+> Task :processResources
+> Task :classes
+> Task :jar
+> Task :processIncludeJars
+> Task :sourcesJar
+
+> Task :compileTestJava
+Note: /home/runner/work/Raufix-Chat-Makro/Raufix-Chat-Makro/src/test/java/dev/chatmacro/studio/testing/JsonTests.java uses or overrides a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+
+> Task :processTestResources NO-SOURCE
+> Task :testClasses
+
+> Task :offlineTests
+Chat Macro Studio - offline test suites
+suites registered: 114 tests
+
+== json ==
+  PASS  round-trips every value kind
+  PASS  keeps Turkish characters and emoji
+  PASS  keeps a surrogate pair intact through a write and parse
+  PASS  escapes control characters on write
+  PASS  rejects raw control characters in input
+  PASS  rejects trailing content
+  PASS  rejects duplicate keys
+  PASS  rejects unpaired surrogates
+  PASS  rejects invalid escapes and unterminated input
+  PASS  enforces a nesting limit
+  PASS  rejects oversized documents
+  PASS  control characters escape to ASCII hex in any default locale
+  PASS  type mismatches are reported, not defaulted
+
+== validation ==
+  PASS  rejects empty and blank names
+  PASS  trims names and keeps unicode
+  PASS  flags duplicate names without rejecting them
+  PASS  rejects overly long names
+  PASS  counts emoji as one character, not two
+  PASS  rejects empty content
+  PASS  rejects newlines so one field cannot become several sends
+  PASS  rejects control characters and the section sign
+  PASS  reports the exact overflow instead of truncating
+  PASS  strips exactly one leading slash from a command
+  PASS  accepts a command typed without a slash
+  PASS  rejects a lone slash
+  PASS  display helper adds the slash back once
+  PASS  rejects zero, negative, NaN and infinite intervals
+  PASS  rejects sub-second and absurd intervals
+  PASS  accepts the documented bounds
+  PASS  initial delay allows zero but not negative
+  PASS  content limits are clamped into a safe range
+
+== scheduler ==
+  PASS  never sends before the user presses start
+  PASS  sends immediately on start and then on the interval
+  PASS  honours the initial delay
+  PASS  disabled macros never send
+  PASS  the global budget caps the combined rate
+  PASS  fair ordering: the longest waiting macro goes first
+  PASS  catch-up drops missed repeats instead of bursting
+  PASS  a wall-clock jump does not release queued messages
+  PASS  ticking twice at the same instant does not double-send
+  PASS  an interval edit takes effect immediately
+  PASS  disabling a macro cancels its pending work
+  PASS  pause holds and resume waits a full interval
+  PASS  an open chat screen holds dispatch
+  PASS  a paused game holds dispatch
+  PASS  focus loss holds dispatch when configured
+  PASS  a scope mismatch holds dispatch
+  PASS  a matching scope allows dispatch
+  PASS  a stale session generation is a hard stop
+  PASS  binding a session re-arms without replaying
+  PASS  not being in a game holds rather than sends
+  PASS  a client rejection stops the session instead of retrying
+  PASS  transient failures back off and then stop that macro
+  PASS  an adapter exception never escapes the tick
+  PASS  switching profiles deactivates the old timers
+  PASS  try-once is a real send and obeys the budget
+  PASS  next-due reporting follows the schedule
+  PASS  policy backoff grows and is capped
+
+== persistence ==
+  PASS  round-trips profiles and macros through JSON
+  PASS  a saved macro comes back disabled and keeps its identity
+  PASS  a corrupt file is set aside, not silently replaced
+  PASS  a newer schema is refused and the store goes read-only
+  PASS  duplicate ids are dropped, not merged
+  PASS  a macro with an unknown parent is skipped
+  PASS  a macro missing from its profile list is re-attached
+  PASS  schema 0 documents are migrated
+  PASS  a failed write is reported, not hidden
+  PASS  saves are debounced and flushed on shutdown
+  PASS  imported macros arrive disabled with fresh ids
+  PASS  exporting without sensitive content masks secret arguments
+  PASS  an oversized stored macro is skipped with a report
+
+== isolation ==
+  PASS  disabling a macro in one profile does not touch a same-named macro elsewhere
+  PASS  editing a macro cannot re-parent it
+  PASS  deleting a profile removes only its own macros
+  PASS  duplicating a profile copies macros with new ids, all disabled
+  PASS  renaming a profile keeps its macros
+  PASS  only the active profile can send
+  PASS  the default run needs an explicit start
+  PASS  auto start on join is opt-in per profile
+  PASS  leaving the world stops the run
+  PASS  profile scope decides where it may run
+  PASS  reloading keeps the selected profile and stays passive
+
+== theme ==
+  PASS  every mode and accent combination stays readable
+  PASS  dark and light surfaces really differ
+  PASS  the accent colour follows the selection
+  PASS  danger and success are not the same colour
+  PASS  textOn corrects a colour that would not be readable
+  PASS  token sets are cached, not rebuilt per frame
+  PASS  tint composites stay opaque
+  PASS  blend lands exactly on both endpoints
+  PASS  contrast maths matches the known WCAG example
+
+== animation ==
+  PASS  progress is time based, not frame based
+  PASS  reduced motion snaps to the target
+  PASS  a new target retargets from the current value
+  PASS  a zero duration never animates
+
+== ui ==
+  PASS  only the visible rows are in the window
+  PASS  scrolling moves the window and keeps the overscan
+  PASS  the scroll offset is clamped when the window shrinks
+  PASS  empty and degenerate inputs produce an empty window
+  PASS  hit testing maps a click to the right row
+  PASS  a viewport taller than the content still works
+  PASS  clamp never inverts its bounds
+
+== privacy ==
+  PASS  secret command arguments are detected
+  PASS  high impact commands are flagged for confirmation
+  PASS  masking keeps the command name and drops the arguments
+  PASS  free text scrubbing hides secret arguments
+  PASS  a macro description never contains the message body
+  PASS  server addresses are masked for diagnostics
+  PASS  card previews do not split surrogate pairs
+
+== bundle ==
+  PASS  a non-bundle document is refused
+  PASS  a newer bundle version is refused
+  PASS  imported intervals are pulled back into range
+  PASS  bundles report sensitive content before importing
+  PASS  empty and malformed macro entries are skipped, not guessed at
+
+---------------------------------------------
+  json: 13 tests, 0 failed
+  validation: 18 tests, 0 failed
+  scheduler: 27 tests, 0 failed
+  persistence: 13 tests, 0 failed
+  isolation: 11 tests, 0 failed
+  theme: 9 tests, 0 failed
+  animation: 4 tests, 0 failed
+  ui: 7 tests, 0 failed
+  privacy: 7 tests, 0 failed
+  bundle: 5 tests, 0 failed
+---------------------------------------------
+TOTAL 114 passed, 0 failed, 114 tests
+RESULT: PASS
+
+> Task :test SKIPPED
+> Task :validateAccessWidener NO-SOURCE
+> Task :check
+> Task :remapJar
+> Task :remapSourcesJar
+> Task :assemble
+> Task :build
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run_4-1794407440345.json
+
+[Incubating] Problems report is available at: file:///home/runner/work/Raufix-Chat-Makro/Raufix-Chat-Makro/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.9.0/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 1m 11s
+9 actionable tasks: 9 executed

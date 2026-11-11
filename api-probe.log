@@ -1,0 +1,585 @@
+== candidate jars in the loom cache ==
+.gradle/loom-cache/minecraftMaven/net/minecraft/minecraft-merged-630a80a23b/1.21.11-net.fabricmc.yarn.1_21_11.1.21.11+build.6-v2/minecraft-merged-630a80a23b-1.21.11-net.fabricmc.yarn.1_21_11.1.21.11+build.6-v2.jar
+== using: .gradle/loom-cache/minecraftMaven/net/minecraft/minecraft-merged-630a80a23b/1.21.11-net.fabricmc.yarn.1_21_11.1.21.11+build.6-v2/minecraft-merged-630a80a23b-1.21.11-net.fabricmc.yarn.1_21_11.1.21.11+build.6-v2.jar ==
+########## net.minecraft.client.gui.Click
+Compiled from "Click.java"
+public final class net.minecraft.client.gui.Click extends java.lang.Record implements net.minecraft.client.input.AbstractInput {
+  public net.minecraft.client.gui.Click(double, double, net.minecraft.client.input.MouseInput);
+  public int getKeycode();
+  public int button();
+  public int modifiers();
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public double x();
+  public double y();
+  public net.minecraft.client.input.MouseInput buttonInfo();
+}
+
+########## net.minecraft.client.input.KeyInput
+Compiled from "KeyInput.java"
+public final class net.minecraft.client.input.KeyInput extends java.lang.Record implements net.minecraft.client.input.AbstractInput {
+  public net.minecraft.client.input.KeyInput(int, int, int);
+  public int getKeycode();
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public int key();
+  public int scancode();
+  public int modifiers();
+}
+
+########## net.minecraft.client.input.CharInput
+Compiled from "CharInput.java"
+public final class net.minecraft.client.input.CharInput extends java.lang.Record {
+  public net.minecraft.client.input.CharInput(int, int);
+  public java.lang.String asString();
+  public boolean isValidChar();
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public int codepoint();
+  public int modifiers();
+}
+
+########## net.minecraft.client.input.MouseInput
+Compiled from "MouseInput.java"
+public final class net.minecraft.client.input.MouseInput extends java.lang.Record implements net.minecraft.client.input.AbstractInput {
+  public net.minecraft.client.input.MouseInput(int, int);
+  public int getKeycode();
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public int button();
+  public int modifiers();
+}
+
+########## net.minecraft.client.gui.screen.Screen
+Compiled from "Screen.java"
+public abstract class net.minecraft.client.gui.screen.Screen extends net.minecraft.client.gui.AbstractParentElement implements net.minecraft.client.gui.Drawable {
+  public static final net.minecraft.util.Identifier MENU_BACKGROUND_TEXTURE;
+  public static final net.minecraft.util.Identifier HEADER_SEPARATOR_TEXTURE;
+  public static final net.minecraft.util.Identifier FOOTER_SEPARATOR_TEXTURE;
+  public static final net.minecraft.util.Identifier INWORLD_HEADER_SEPARATOR_TEXTURE;
+  public static final net.minecraft.util.Identifier INWORLD_FOOTER_SEPARATOR_TEXTURE;
+  protected static final float field_60460;
+  protected final net.minecraft.text.Text title;
+  protected final net.minecraft.client.MinecraftClient client;
+  public int width;
+  public int height;
+  protected final net.minecraft.client.font.TextRenderer textRenderer;
+  protected net.minecraft.client.gui.widget.CyclingButtonWidget<net.minecraft.client.option.NarratorMode> narratorToggleButton;
+  protected final java.util.concurrent.Executor executor;
+  protected net.minecraft.client.gui.screen.Screen(net.minecraft.text.Text);
+  protected net.minecraft.client.gui.screen.Screen(net.minecraft.client.MinecraftClient, net.minecraft.client.font.TextRenderer, net.minecraft.text.Text);
+  public net.minecraft.text.Text getTitle();
+  public net.minecraft.text.Text getNarratedTitle();
+  public final void renderWithTooltip(net.minecraft.client.gui.DrawContext, int, int, float);
+  public void render(net.minecraft.client.gui.DrawContext, int, int, float);
+  public boolean keyPressed(net.minecraft.client.input.KeyInput);
+  protected void setInitialFocus();
+  protected void setInitialFocus(net.minecraft.client.gui.Element);
+  public void blur();
+  protected void switchFocus(net.minecraft.client.gui.navigation.GuiNavigationPath);
+  public boolean shouldCloseOnEsc();
+  public void close();
+  protected <T extends net.minecraft.client.gui.Element & net.minecraft.client.gui.Drawable & net.minecraft.client.gui.Selectable> T addDrawableChild(T);
+  protected <T extends net.minecraft.client.gui.Drawable> T addDrawable(T);
+  protected <T extends net.minecraft.client.gui.Element & net.minecraft.client.gui.Selectable> T addSelectableChild(T);
+  protected void remove(net.minecraft.client.gui.Element);
+  protected void clearChildren();
+  public static java.util.List<net.minecraft.text.Text> getTooltipFromItem(net.minecraft.client.MinecraftClient, net.minecraft.item.ItemStack);
+  protected void insertText(java.lang.String, boolean);
+  protected static void handleClickEvent(net.minecraft.text.ClickEvent, net.minecraft.client.MinecraftClient, net.minecraft.client.gui.screen.Screen);
+  protected static void handleBasicClickEvent(net.minecraft.text.ClickEvent, net.minecraft.client.MinecraftClient, net.minecraft.client.gui.screen.Screen);
+  protected static boolean handleOpenUri(net.minecraft.client.MinecraftClient, net.minecraft.client.gui.screen.Screen, java.net.URI);
+  protected static void handleRunCommand(net.minecraft.client.network.ClientPlayerEntity, java.lang.String, net.minecraft.client.gui.screen.Screen);
+  public final void init(int, int);
+  protected void clearAndInit();
+  protected void setWidgetAlpha(float);
+  public java.util.List<? extends net.minecraft.client.gui.Element> children();
+  protected void init();
+  public void tick();
+  public void removed();
+  public void onDisplayed();
+  public void renderBackground(net.minecraft.client.gui.DrawContext, int, int, float);
+  protected void applyBlur(net.minecraft.client.gui.DrawContext);
+  protected void renderPanoramaBackground(net.minecraft.client.gui.DrawContext, float);
+  protected void renderDarkening(net.minecraft.client.gui.DrawContext);
+  protected void renderDarkening(net.minecraft.client.gui.DrawContext, int, int, int, int);
+  public static void renderBackgroundTexture(net.minecraft.client.gui.DrawContext, net.minecraft.util.Identifier, int, int, float, float, int, int);
+  public void renderInGameBackground(net.minecraft.client.gui.DrawContext);
+  public boolean shouldPause();
+  public boolean deferSubtitles();
+  protected boolean allowRotatingPanorama();
+  public boolean keepOpenThroughPortal();
+  protected void refreshWidgetPositions();
+  public void resize(int, int);
+  public void addCrashReportSection(net.minecraft.util.crash.CrashReport);
+  protected boolean isValidCharacterForName(java.lang.String, int, int);
+  public boolean isMouseOver(double, double);
+  public void onFilesDropped(java.util.List<java.nio.file.Path>);
+  public void applyMouseMoveNarratorDelay();
+  public void applyMousePressScrollNarratorDelay();
+  public void applyKeyPressNarratorDelay();
+  public void updateNarrator();
+  public void narrateScreenIfNarrationEnabled(boolean);
+  protected boolean hasUsageText();
+  protected void addScreenNarrations(net.minecraft.client.gui.screen.narration.NarrationMessageBuilder);
+  protected void addElementNarrations(net.minecraft.client.gui.screen.narration.NarrationMessageBuilder);
+  protected net.minecraft.text.Text getUsageNarrationText();
+  public static net.minecraft.client.gui.screen.Screen$SelectedElementNarrationData findSelectedElementData(java.util.List<? extends net.minecraft.client.gui.Selectable>, net.minecraft.client.gui.Selectable);
+  public void refreshNarrator(boolean);
+  public net.minecraft.client.font.TextRenderer getTextRenderer();
+  public boolean showsStatusEffects();
+  public boolean canInterruptOtherScreen();
+  public net.minecraft.client.gui.ScreenRect getNavigationFocus();
+  public net.minecraft.sound.MusicSound getMusic();
+  static {};
+}
+
+########## net.minecraft.client.gui.screen.narration.NarrationMessageBuilder
+Compiled from "NarrationMessageBuilder.java"
+public interface net.minecraft.client.gui.screen.narration.NarrationMessageBuilder {
+  public default void put(net.minecraft.client.gui.screen.narration.NarrationPart, net.minecraft.text.Text);
+  public default void put(net.minecraft.client.gui.screen.narration.NarrationPart, java.lang.String);
+  public default void put(net.minecraft.client.gui.screen.narration.NarrationPart, net.minecraft.text.Text...);
+  public abstract void put(net.minecraft.client.gui.screen.narration.NarrationPart, net.minecraft.client.gui.screen.narration.Narration<?>);
+  public abstract net.minecraft.client.gui.screen.narration.NarrationMessageBuilder nextMessage();
+}
+
+########## net.minecraft.client.gui.widget.ButtonWidget
+Compiled from "ButtonWidget.java"
+public abstract class net.minecraft.client.gui.widget.ButtonWidget extends net.minecraft.client.gui.widget.PressableWidget {
+  public static final int DEFAULT_WIDTH_SMALL;
+  public static final int DEFAULT_WIDTH;
+  public static final int field_49479;
+  public static final int DEFAULT_HEIGHT;
+  public static final int field_46856;
+  protected static final net.minecraft.client.gui.widget.ButtonWidget$NarrationSupplier DEFAULT_NARRATION_SUPPLIER;
+  protected final net.minecraft.client.gui.widget.ButtonWidget$PressAction onPress;
+  protected final net.minecraft.client.gui.widget.ButtonWidget$NarrationSupplier narrationSupplier;
+  public static net.minecraft.client.gui.widget.ButtonWidget$Builder builder(net.minecraft.text.Text, net.minecraft.client.gui.widget.ButtonWidget$PressAction);
+  protected net.minecraft.client.gui.widget.ButtonWidget(int, int, int, int, net.minecraft.text.Text, net.minecraft.client.gui.widget.ButtonWidget$PressAction, net.minecraft.client.gui.widget.ButtonWidget$NarrationSupplier);
+  public void onPress(net.minecraft.client.input.AbstractInput);
+  protected net.minecraft.text.MutableText getNarrationMessage();
+  public void appendClickableNarrations(net.minecraft.client.gui.screen.narration.NarrationMessageBuilder);
+  static {};
+}
+
+########## net.minecraft.client.gui.widget.TextFieldWidget
+Compiled from "TextFieldWidget.java"
+public class net.minecraft.client.gui.widget.TextFieldWidget extends net.minecraft.client.gui.widget.ClickableWidget {
+  public static final int field_32194;
+  public static final int field_32195;
+  public static final int DEFAULT_EDITABLE_COLOR;
+  public static final net.minecraft.text.Style PLACEHOLDER_STYLE;
+  public static final net.minecraft.text.Style SEARCH_STYLE;
+  public net.minecraft.client.gui.widget.TextFieldWidget(net.minecraft.client.font.TextRenderer, int, int, net.minecraft.text.Text);
+  public net.minecraft.client.gui.widget.TextFieldWidget(net.minecraft.client.font.TextRenderer, int, int, int, int, net.minecraft.text.Text);
+  public net.minecraft.client.gui.widget.TextFieldWidget(net.minecraft.client.font.TextRenderer, int, int, int, int, net.minecraft.client.gui.widget.TextFieldWidget, net.minecraft.text.Text);
+  public void setChangedListener(java.util.function.Consumer<java.lang.String>);
+  public void addFormatter(net.minecraft.client.gui.widget.TextFieldWidget$Formatter);
+  protected net.minecraft.text.MutableText getNarrationMessage();
+  public void setText(java.lang.String);
+  public java.lang.String getText();
+  public java.lang.String getSelectedText();
+  public void setX(int);
+  public void setY(int);
+  public void setTextPredicate(java.util.function.Predicate<java.lang.String>);
+  public void write(java.lang.String);
+  public void eraseWords(int);
+  public void eraseCharacters(int);
+  public void eraseCharactersTo(int);
+  public int getWordSkipPosition(int);
+  public void moveCursor(int, boolean);
+  public void setCursor(int, boolean);
+  public void setSelectionStart(int);
+  public void setCursorToStart(boolean);
+  public void setCursorToEnd(boolean);
+  public boolean keyPressed(net.minecraft.client.input.KeyInput);
+  public boolean isActive();
+  public boolean charTyped(net.minecraft.client.input.CharInput);
+  public void onClick(net.minecraft.client.gui.Click, boolean);
+  protected void onDrag(net.minecraft.client.gui.Click, double, double);
+  public void playDownSound(net.minecraft.client.sound.SoundManager);
+  public void renderWidget(net.minecraft.client.gui.DrawContext, int, int, float);
+  public void setMaxLength(int);
+  public int getCursor();
+  public boolean drawsBackground();
+  public void setDrawsBackground(boolean);
+  public void setEditableColor(int);
+  public void setUneditableColor(int);
+  public void setFocused(boolean);
+  public void setEditable(boolean);
+  public void setCentered(boolean);
+  public void setTextShadow(boolean);
+  public void setInvertSelectionBackground(boolean);
+  public int getInnerWidth();
+  public void setSelectionEnd(int);
+  public void setFocusUnlocked(boolean);
+  public boolean isVisible();
+  public void setVisible(boolean);
+  public void setSuggestion(java.lang.String);
+  public int getCharacterX(int);
+  public void appendClickableNarrations(net.minecraft.client.gui.screen.narration.NarrationMessageBuilder);
+  public void setPlaceholder(net.minecraft.text.Text);
+  static {};
+}
+
+########## net.minecraft.client.gui.screen.ChatScreen
+Compiled from "ChatScreen.java"
+public class net.minecraft.client.gui.screen.ChatScreen extends net.minecraft.client.gui.screen.Screen {
+  public static final double SHIFT_SCROLL_AMOUNT;
+  protected net.minecraft.client.gui.widget.TextFieldWidget chatField;
+  protected java.lang.String originalChatText;
+  protected boolean draft;
+  protected net.minecraft.client.gui.screen.ChatScreen$CloseReason closeReason;
+  net.minecraft.client.gui.screen.ChatInputSuggestor chatInputSuggestor;
+  public net.minecraft.client.gui.screen.ChatScreen(java.lang.String, boolean);
+  protected void init();
+  protected void setInitialFocus();
+  public void resize(int, int);
+  public void close();
+  public void removed();
+  protected boolean shouldNotSaveDraft();
+  public boolean keyPressed(net.minecraft.client.input.KeyInput);
+  public boolean mouseScrolled(double, double, double, double);
+  public boolean mouseClicked(net.minecraft.client.gui.Click, boolean);
+  public void insertText(java.lang.String, boolean);
+  public void setChatFromHistory(int);
+  public void render(net.minecraft.client.gui.DrawContext, int, int, float);
+  public void renderBackground(net.minecraft.client.gui.DrawContext, int, int, float);
+  public boolean shouldPause();
+  public boolean keepOpenThroughPortal();
+  protected void addScreenNarrations(net.minecraft.client.gui.screen.narration.NarrationMessageBuilder);
+  public void sendMessage(java.lang.String, boolean);
+  public java.lang.String normalize(java.lang.String);
+  static {};
+}
+
+########## net.minecraft.client.option.KeyBinding$Category
+Compiled from "KeyBinding.java"
+public final class net.minecraft.client.option.KeyBinding$Category extends java.lang.Record {
+  static final java.util.List<net.minecraft.client.option.KeyBinding$Category> CATEGORIES;
+  public static final net.minecraft.client.option.KeyBinding$Category MOVEMENT;
+  public static final net.minecraft.client.option.KeyBinding$Category MISC;
+  public static final net.minecraft.client.option.KeyBinding$Category MULTIPLAYER;
+  public static final net.minecraft.client.option.KeyBinding$Category GAMEPLAY;
+  public static final net.minecraft.client.option.KeyBinding$Category INVENTORY;
+  public static final net.minecraft.client.option.KeyBinding$Category CREATIVE;
+  public static final net.minecraft.client.option.KeyBinding$Category SPECTATOR;
+  public static final net.minecraft.client.option.KeyBinding$Category DEBUG;
+  public net.minecraft.client.option.KeyBinding$Category(net.minecraft.util.Identifier);
+  public static net.minecraft.client.option.KeyBinding$Category create(net.minecraft.util.Identifier);
+  public net.minecraft.text.Text getLabel();
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public net.minecraft.util.Identifier id();
+  static {};
+}
+
+########## net.minecraft.command.CommandRegistryAccess
+Compiled from "CommandRegistryAccess.java"
+public interface net.minecraft.command.CommandRegistryAccess extends net.minecraft.registry.RegistryWrapper$WrapperLookup {
+  public static net.minecraft.command.CommandRegistryAccess of(net.minecraft.registry.RegistryWrapper$WrapperLookup, net.minecraft.resource.featuretoggle.FeatureSet);
+  public abstract net.minecraft.resource.featuretoggle.FeatureSet getEnabledFeatures();
+}
+
+########## net.minecraft.client.network.ServerInfo
+Compiled from "ServerInfo.java"
+public class net.minecraft.client.network.ServerInfo {
+  public java.lang.String name;
+  public java.lang.String address;
+  public net.minecraft.text.Text playerCountLabel;
+  public net.minecraft.text.Text label;
+  public net.minecraft.server.ServerMetadata$Players players;
+  public long ping;
+  public int protocolVersion;
+  public net.minecraft.text.Text version;
+  public java.util.List<net.minecraft.text.Text> playerListSummary;
+  public net.minecraft.client.network.ServerInfo(java.lang.String, java.lang.String, net.minecraft.client.network.ServerInfo$ServerType);
+  public net.minecraft.nbt.NbtCompound toNbt();
+  public net.minecraft.client.network.ServerInfo$ResourcePackPolicy getResourcePackPolicy();
+  public void setResourcePackPolicy(net.minecraft.client.network.ServerInfo$ResourcePackPolicy);
+  public static net.minecraft.client.network.ServerInfo fromNbt(net.minecraft.nbt.NbtCompound);
+  public byte[] getFavicon();
+  public void setFavicon(byte[]);
+  public boolean isLocal();
+  public boolean isRealm();
+  public net.minecraft.client.network.ServerInfo$ServerType getServerType();
+  public boolean hasAcceptedCodeOfConduct(java.lang.String);
+  public void setAcceptedCodeOfConduct(java.lang.String);
+  public void resetAcceptedCodeOfConduct();
+  public void copyFrom(net.minecraft.client.network.ServerInfo);
+  public void copyWithSettingsFrom(net.minecraft.client.network.ServerInfo);
+  public net.minecraft.client.network.ServerInfo$Status getStatus();
+  public void setStatus(net.minecraft.client.network.ServerInfo$Status);
+  public static byte[] validateFavicon(byte[]);
+  static {};
+}
+
+########## net.minecraft.client.MinecraftClient
+Compiled from "MinecraftClient.java"
+public class net.minecraft.client.MinecraftClient extends net.minecraft.util.thread.ReentrantThreadExecutor<java.lang.Runnable> implements net.minecraft.client.WindowEventHandler {
+  static net.minecraft.client.MinecraftClient instance;
+  public static final net.minecraft.util.Identifier DEFAULT_FONT_ID;
+  public static final net.minecraft.util.Identifier UNICODE_FONT_ID;
+  public static final net.minecraft.util.Identifier ALT_TEXT_RENDERER_ID;
+  public static final java.lang.String GL_ERROR_DIALOGUE;
+  public final net.minecraft.client.render.WorldRenderer worldRenderer;
+  public final net.minecraft.client.particle.ParticleManager particleManager;
+  public final net.minecraft.client.font.TextRenderer textRenderer;
+  public final net.minecraft.client.font.TextRenderer advanceValidatingTextRenderer;
+  public final net.minecraft.client.render.GameRenderer gameRenderer;
+  public final net.minecraft.client.gui.hud.InGameHud inGameHud;
+  public final net.minecraft.client.option.GameOptions options;
+  public final net.minecraft.client.gui.hud.debug.DebugHudProfile debugHudEntryList;
+  public final net.minecraft.client.Mouse mouse;
+  public final net.minecraft.client.Keyboard keyboard;
+  public final java.io.File runDirectory;
+  public net.minecraft.client.network.ClientPlayerInteractionManager interactionManager;
+  public net.minecraft.client.world.ClientWorld world;
+  public net.minecraft.client.network.ClientPlayerEntity player;
+  public net.minecraft.entity.Entity targetedEntity;
+  public net.minecraft.util.hit.HitResult crosshairTarget;
+  public int attackCooldown;
+  public boolean skipGameRender;
+  public net.minecraft.client.gui.screen.Screen currentScreen;
+  java.lang.Thread thread;
+  public boolean wireFrame;
+  public boolean chunkCullingEnabled;
+  public net.minecraft.client.MinecraftClient(net.minecraft.client.RunArgs);
+  public boolean isShiftPressed();
+  public boolean isCtrlPressed();
+  public boolean isAltPressed();
+  public boolean isFinishedLoading();
+  public void updateWindowTitle();
+  public boolean isOfflineDeveloperMode();
+  public static net.minecraft.util.ModStatus getModStatus();
+  public void onResourceReloadFailure(java.lang.Throwable, net.minecraft.text.Text, net.minecraft.client.MinecraftClient$LoadingContext);
+  public void onShaderResourceReloadFailure(java.lang.Exception);
+  public void run();
+  void onFontOptionsChanged();
+  public net.minecraft.client.gl.Framebuffer getFramebuffer();
+  public java.lang.String getGameVersion();
+  public java.lang.String getVersionType();
+  public void setCrashReportSupplierAndAddDetails(net.minecraft.util.crash.CrashReport);
+  public void setCrashReportSupplier(net.minecraft.util.crash.CrashReport);
+  public void printCrashReport(net.minecraft.util.crash.CrashReport);
+  public static int saveCrashReport(java.io.File, net.minecraft.util.crash.CrashReport);
+  public static void printCrashReport(net.minecraft.client.MinecraftClient, java.io.File, net.minecraft.util.crash.CrashReport);
+  public boolean forcesUnicodeFont();
+  public java.util.concurrent.CompletableFuture<java.lang.Void> reloadResources();
+  public net.minecraft.world.level.storage.LevelStorage getLevelStorage();
+  public void openChatScreen(net.minecraft.client.gui.hud.ChatHud$ChatMethod);
+  public void setScreen(net.minecraft.client.gui.screen.Screen);
+  public void setOverlay(net.minecraft.client.gui.screen.Overlay);
+  public void stop();
+  public void close();
+  public void onResolutionChanged();
+  public void onCursorEnterChanged();
+  public int getCurrentFps();
+  public long getRenderTime();
+  public boolean toggleDebugProfiler(java.util.function.Consumer<net.minecraft.text.Text>);
+  public void scheduleStop();
+  public boolean isRunning();
+  public void openGameMenu(boolean);
+  public net.minecraft.client.sound.MusicTracker getMusicTracker();
+  public void tick();
+  public net.minecraft.client.session.telemetry.TelemetryManager getTelemetryManager();
+  public double getGpuUtilizationPercentage();
+  public net.minecraft.client.session.ProfileKeys getProfileKeys();
+  public net.minecraft.server.integrated.IntegratedServerLoader createIntegratedServerLoader();
+  public void startIntegratedServer(net.minecraft.world.level.storage.LevelStorage$Session, net.minecraft.resource.ResourcePackManager, net.minecraft.server.SaveLoader, boolean);
+  public void joinWorld(net.minecraft.client.world.ClientWorld);
+  public void disconnect(net.minecraft.text.Text);
+  public void disconnectWithSavingScreen();
+  public void disconnectWithProgressScreen();
+  public void disconnectWithProgressScreen(boolean);
+  public void disconnect(net.minecraft.client.gui.screen.Screen, boolean);
+  public void disconnect(net.minecraft.client.gui.screen.Screen, boolean, boolean);
+  public void onDisconnected();
+  public void enterReconfiguration(net.minecraft.client.gui.screen.Screen);
+  public void setScreenAndRender(net.minecraft.client.gui.screen.Screen);
+  public boolean isOptionalTelemetryEnabled();
+  public boolean isOptionalTelemetryEnabledByApi();
+  public boolean isTelemetryEnabledByApi();
+  public boolean isMultiplayerEnabled();
+  public boolean isRealmsEnabled();
+  public com.mojang.authlib.minecraft.BanDetails getMultiplayerBanDetails();
+  public boolean isUsernameBanned();
+  public boolean shouldBlockMessages(java.util.UUID);
+  public net.minecraft.client.MinecraftClient$ChatRestriction getChatRestriction();
+  public final boolean isDemo();
+  public final boolean canSwitchGameMode();
+  public net.minecraft.client.network.ClientPlayNetworkHandler getNetworkHandler();
+  public static boolean isHudEnabled();
+  public static boolean usesImprovedTransparency();
+  public static boolean isAmbientOcclusionEnabled();
+  public net.minecraft.util.crash.CrashReport addDetailsToCrashReport(net.minecraft.util.crash.CrashReport);
+  public static void addSystemDetailsToCrashReport(net.minecraft.client.MinecraftClient, net.minecraft.client.resource.language.LanguageManager, java.lang.String, net.minecraft.client.option.GameOptions, net.minecraft.util.crash.CrashReport);
+  public static net.minecraft.client.MinecraftClient getInstance();
+  public java.util.concurrent.CompletableFuture<java.lang.Void> reloadResourcesConcurrently();
+  public void ensureAbuseReportContext(net.minecraft.client.session.report.ReporterEnvironment);
+  public net.minecraft.client.network.ServerInfo getCurrentServerEntry();
+  public boolean isInSingleplayer();
+  public boolean isIntegratedServerRunning();
+  public net.minecraft.server.integrated.IntegratedServer getServer();
+  public boolean isConnectedToLocalServer();
+  public boolean uuidEquals(java.util.UUID);
+  public net.minecraft.client.session.Session getSession();
+  public com.mojang.authlib.GameProfile getGameProfile();
+  public java.net.Proxy getNetworkProxy();
+  public net.minecraft.client.texture.TextureManager getTextureManager();
+  public net.minecraft.client.gl.ShaderLoader getShaderLoader();
+  public net.minecraft.resource.ResourceManager getResourceManager();
+  public net.minecraft.resource.ResourcePackManager getResourcePackManager();
+  public net.minecraft.resource.DefaultResourcePack getDefaultResourcePack();
+  public net.minecraft.client.resource.server.ServerResourcePackLoader getServerResourcePackProvider();
+  public java.nio.file.Path getResourcePackDir();
+  public net.minecraft.client.resource.language.LanguageManager getLanguageManager();
+  public boolean isPaused();
+  public net.minecraft.client.resource.VideoWarningManager getVideoWarningManager();
+  public net.minecraft.client.sound.SoundManager getSoundManager();
+  public net.minecraft.sound.MusicSound getMusicInstance();
+  public float getMusicVolume();
+  public net.minecraft.util.ApiServices getApiServices();
+  public net.minecraft.client.texture.PlayerSkinProvider getSkinProvider();
+  public net.minecraft.entity.Entity getCameraEntity();
+  public void setCameraEntity(net.minecraft.entity.Entity);
+  public boolean hasOutline(net.minecraft.entity.Entity);
+  protected java.lang.Thread getThread();
+  public java.lang.Runnable createTask(java.lang.Runnable);
+  protected boolean canExecute(java.lang.Runnable);
+  public net.minecraft.client.render.block.BlockRenderManager getBlockRenderManager();
+  public net.minecraft.client.render.entity.EntityRenderManager getEntityRenderDispatcher();
+  public net.minecraft.client.render.block.entity.BlockEntityRenderManager getBlockEntityRenderDispatcher();
+  public net.minecraft.client.render.item.ItemRenderer getItemRenderer();
+  public net.minecraft.client.render.MapRenderer getMapRenderer();
+  public com.mojang.datafixers.DataFixer getDataFixer();
+  public net.minecraft.client.render.RenderTickCounter getRenderTickCounter();
+  public net.minecraft.client.color.block.BlockColors getBlockColors();
+  public boolean hasReducedDebugInfo();
+  public net.minecraft.client.toast.ToastManager getToastManager();
+  public net.minecraft.client.tutorial.TutorialManager getTutorialManager();
+  public boolean isWindowFocused();
+  public net.minecraft.client.option.HotbarStorage getCreativeHotbarStorage();
+  public net.minecraft.client.render.model.BakedModelManager getBakedModelManager();
+  public net.minecraft.client.texture.AtlasManager getAtlasManager();
+  public net.minecraft.client.texture.MapTextureManager getMapTextureManager();
+  public net.minecraft.client.resource.waypoint.WaypointStyleAssetManager getWaypointStyleAssetManager();
+  public void onWindowFocusChanged(boolean);
+  public net.minecraft.text.Text takePanorama(java.io.File);
+  public net.minecraft.client.resource.SplashTextResourceSupplier getSplashTextLoader();
+  public net.minecraft.client.gui.screen.Overlay getOverlay();
+  public net.minecraft.client.network.SocialInteractionsManager getSocialInteractionsManager();
+  public net.minecraft.client.util.Window getWindow();
+  public net.minecraft.client.option.InactivityFpsLimiter getInactivityFpsLimiter();
+  public net.minecraft.client.gui.hud.DebugHud getDebugHud();
+  public net.minecraft.client.render.BufferBuilderStorage getBufferBuilders();
+  public void setMipmapLevels(int);
+  public net.minecraft.client.render.entity.model.LoadedEntityModels getLoadedEntityModels();
+  public boolean shouldFilterText();
+  public void loadBlockList();
+  public net.minecraft.client.gui.navigation.GuiNavigationType getNavigationType();
+  public void setNavigationType(net.minecraft.client.gui.navigation.GuiNavigationType);
+  public net.minecraft.client.util.NarratorManager getNarratorManager();
+  public net.minecraft.client.network.message.MessageHandler getMessageHandler();
+  public net.minecraft.client.session.report.AbuseReportContext getAbuseReportContext();
+  public net.minecraft.client.realms.RealmsPeriodicCheckers getRealmsPeriodicCheckers();
+  public net.minecraft.client.QuickPlayLogger getQuickPlayLogger();
+  public net.minecraft.client.util.CommandHistoryManager getCommandHistoryManager();
+  public net.minecraft.util.path.SymlinkFinder getSymlinkFinder();
+  public net.minecraft.client.texture.PlayerSkinCache getPlayerSkinCache();
+  public net.minecraft.client.item.ItemModelManager getItemModelManager();
+  public boolean canCurrentScreenInterruptOtherScreen();
+  public static java.lang.String getLauncherBrand();
+  public net.minecraft.network.PacketApplyBatcher getPacketApplyBatcher();
+  public net.minecraft.world.debug.gizmo.GizmoDrawing$CollectorScope newGizmoScope();
+  public java.util.Collection<net.minecraft.world.debug.gizmo.GizmoCollectorImpl$Entry> getGizmos();
+  static {};
+}
+
+########## nested/related types actually present in the jar
+net/minecraft/client/gui/AbstractParentElement.class
+net/minecraft/client/gui/Click.class
+net/minecraft/client/gui/CubeMapRenderer.class
+net/minecraft/client/gui/DrawContext.class
+net/minecraft/client/gui/Drawable.class
+net/minecraft/client/gui/EditBox.class
+net/minecraft/client/gui/Element.class
+net/minecraft/client/gui/LogoDrawer.class
+net/minecraft/client/gui/Narratable.class
+net/minecraft/client/gui/ParentElement.class
+net/minecraft/client/gui/PlayerSkinDrawer.class
+net/minecraft/client/gui/RotatingCubeMapRenderer.class
+net/minecraft/client/gui/ScreenPos.class
+net/minecraft/client/gui/ScreenRect.class
+net/minecraft/client/gui/Selectable.class
+net/minecraft/client/gui/Updatable.class
+net/minecraft/client/option/KeyBinding$Category.class
+net/minecraft/client/option/KeyBinding.class
+net/minecraft/command/ArgumentGetter.class
+net/minecraft/command/BlockDataObject.class
+net/minecraft/command/CommandAction.class
+net/minecraft/command/CommandExecutionContext.class
+net/minecraft/command/CommandFunctionAction.class
+net/minecraft/command/CommandQueueEntry.class
+net/minecraft/command/CommandRegistryAccess.class
+net/minecraft/command/CommandSource.class
+net/minecraft/command/ControlFlowAware.class
+net/minecraft/command/DataCommandObject.class
+net/minecraft/command/DataCommandStorage.class
+net/minecraft/command/DefaultPermissions.class
+net/minecraft/command/EntityDataObject.class
+net/minecraft/command/EntitySelector.class
+net/minecraft/command/EntitySelectorOptions.class
+net/minecraft/command/EntitySelectorReader.class
+net/minecraft/command/ExecutionControl.class
+net/minecraft/command/ExecutionFlags.class
+net/minecraft/command/FallthroughCommandAction.class
+net/minecraft/command/FixedCommandAction.class
+net/minecraft/command/Forkable.class
+net/minecraft/command/Frame.class
+net/minecraft/command/IsolatedCommandAction.class
+net/minecraft/command/MacroInvocation.class
+net/minecraft/command/ReturnValueConsumer.class
+net/minecraft/command/SingleCommandAction.class
+net/minecraft/command/SourcedCommandAction.class
+net/minecraft/command/SteppedCommandAction.class
+net/minecraft/command/StorageDataObject.class
+net/minecraft/command/TranslatableBuiltInExceptions.class
+net/minecraft/screen/AbstractCraftingScreenHandler.class
+net/minecraft/screen/AbstractFurnaceScreenHandler.class
+net/minecraft/screen/AbstractRecipeScreenHandler.class
+net/minecraft/screen/AnvilScreenHandler.class
+net/minecraft/screen/ArrayPropertyDelegate.class
+net/minecraft/screen/BeaconScreenHandler.class
+net/minecraft/screen/BlastFurnaceScreenHandler.class
+net/minecraft/screen/BrewingStandScreenHandler.class
+net/minecraft/screen/CartographyTableScreenHandler.class
+net/minecraft/screen/CrafterScreenHandler.class
+net/minecraft/screen/CraftingScreenHandler.class
+net/minecraft/screen/EnchantmentScreenHandler.class
+net/minecraft/screen/ForgingScreenHandler.class
+net/minecraft/screen/FurnaceScreenHandler.class
+net/minecraft/screen/GenericContainerScreenHandler.class
+net/minecraft/screen/GrindstoneScreenHandler.class
+net/minecraft/screen/HopperScreenHandler.class
+net/minecraft/screen/HorseScreenHandler.class
+net/minecraft/screen/LecternScreenHandler.class
+net/minecraft/screen/LoomScreenHandler.class
+net/minecraft/screen/MerchantScreenHandler.class
+net/minecraft/screen/MountScreenHandler.class
+net/minecraft/screen/NamedScreenHandlerFactory.class
+net/minecraft/screen/NautilusScreenHandler.class
+net/minecraft/screen/PlayerScreenHandler.class
+net/minecraft/screen/Property.class
+net/minecraft/screen/PropertyDelegate.class
+net/minecraft/screen/ScreenHandler.class
+net/minecraft/screen/ScreenHandlerContext.class
+net/minecraft/screen/ScreenHandlerFactory.class
+net/minecraft/screen/ScreenHandlerListener.class
+net/minecraft/screen/ScreenHandlerSyncHandler.class
