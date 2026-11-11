@@ -13,8 +13,11 @@ cd "$ROOT"
 # -x patterns are matched against the stored path, so exclude the whole dist tree
 # before writing into it (writing the zip into a directory being zipped is a trap).
 zip -qr "$OUT/$NAME.zip" . -x "dist/*" \
-  -x ".git/*" -x "*/build/*" -x "*/run/*" -x "*/.gradle/*" \
-  -x "*/dist/*" -x "*/logs/*" -x "*/.idea/*" -x "*.DS_Store"
+  -x ".git/*" -x "build/*" -x "*/build/*" -x "*/run/*" -x "*/.gradle/*" \
+  -x "*/dist/*" -x "*/logs/*" -x "*/.idea/*" -x "*.DS_Store" \
+  -x "tools/real-javac/compiler/*" -x "tools/real-javac/runtime/*" \
+  -x "tools/real-javac/tracejvm/*" -x "tools/real-javac/runtime-release/*" \
+  -x ".cache/*"
 
 # Fail loudly if a Minecraft/Fabric binary ever slips in.
 if unzip -l "$OUT/$NAME.zip" | grep -qiE '(minecraft|fabric|loader|mappings)[^/]*\.jar'; then

@@ -129,3 +129,45 @@ PMD, Qodana, SpotBugs, Mill, ECJ and the JetBrains DCEVM runtime were requested 
 the user and are **not installed**: their download hosts are blocked here and
 SpotBugs additionally needs compiled bytecode that no available compiler can
 produce. Do not describe those tools as having run against this code.
+
+## Building without Gradle (what this environment actually did)
+
+`./gradlew build` is the real build. It was never run here, because Gradle,
+Loom and the Fabric/Minecraft artifacts are unreachable. Two fallbacks exist, and
+both are in the repo and were executed:
+
+### A. `scripts/build-jar.sh` — real javac, real JVM, core-only jar
+
+```bash
+tools/fetch-javac-toolchain.sh                 # once, ~60 MB, not committed
+JAVA=/path/to/bin/java ./scripts/build-jar.sh
+```
+
+It compiles with **TraceJVM 0.4.1**, which is OpenJDK 23.0.2+7 `javac` compiled
+to WebAssembly — the same frontend, emitting real `.class` files with major
+version 67. `tools/real-javac/` holds the thin Node host (a disk-backed `fetch`
+and a `node:worker_threads` bridge) so the shipped compiler binary can run
+outside a browser; nothing there re-implements javac.
+
+The script then runs the suite on a stock JVM against those class files and packs
+`dist/core/chat-macro-studio-1.0.0-core.jar` with `scripts/pack-jar.py`. That jar
+is **not** an installable mod — read `JAR.md` before doing anything with it.
+
+### B. `scripts/run-offline-tests.sh` — the older TeaVM harness
+
+No JDK needed, but it is a different compiler build and only runs the
+Minecraft-free core. It produced the numbers in `TEST_REPORT.md`.
+
+### Cross-checks that do not need a JVM at all
+
+```bash
+python3 scripts/check-languages.py             # 194 keys, parity + placeholders
+python3 scripts/verify-minecraft-data.py       # exact 1.21.11, Right Shift, no F30
+python3 scripts/verify-fabric-api-surface.py   # the 9 Fabric types the code imports
+SEMGREP=.venv/bin/semgrep ./scripts/run-lint.sh
+```
+
+`verify-minecraft-data.py` reads the published `minecraft-data` 3.119.0 dataset
+for `data/pc/1.21.11`: it confirms the pin is a real release (protocol 774) and
+that `key.keyboard.right.shift` exists while `key.keyboard.f30` does not. That is
+where the "F30 is only an alias" claim comes from — not from memory.

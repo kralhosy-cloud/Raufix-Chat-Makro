@@ -135,6 +135,59 @@ $ JW_ASSETS=... node tools/offline-javac/jw.mjs check --exclude "/client/" src/m
 # sources=55 diagnostics=0 errors=0 compileOk=true
 ```
 
+### 1.6 Real javac and a real JVM (added later, same branch)
+
+The suite above runs on a WebAssembly build of javac and a WASI runtime. A second
+path was then built, and it removes the interpreter from the loop:
+
+```
+$ JAVA=/tmp/jdkprobe/x/jdk4py/java-runtime/bin/java ./scripts/build-jar.sh
+== java:    openjdk version "25.0.2" 2026-01-20 LTS
+== 1/4 compile core + tests in one javac run (real javac 23.0.2, WebAssembly build)
+# sources=55 excluded=15 errors=0 status=completed ms=2110
+# classfiles=90 tests=19 out=.../build/classes
+== 3/4 run the suite on the real JVM (openjdk version "25.0.2")
+TOTAL 114 passed, 0 failed, 114 tests
+RESULT: PASS
+== 4/4 pack the jar
+  "bytes": 129219, "classFiles": 71
+```
+
+What that means, precisely:
+
+* the compiler is the real OpenJDK 23 `javac` frontend, not a re-implementation,
+  and it emitted `.class` files (major version 67) — verified by the magic number
+  and by loading them;
+* the tests ran on **Temurin 25**, a stock HotSpot JVM (`java -cp ... TestMain`),
+  against those class files, and the same 114 assertions passed;
+* a `Probe` class loaded `dev.chatmacro.studio.Studio` **from the packaged jar**
+  (`getProtectionDomain().getCodeSource()` reported the jar path).
+
+What it still does not mean: the `client.**` sources were not part of that
+compile (no Minecraft/Fabric classes exist here), and the jar is therefore not
+installable — see `JAR.md` and `KNOWN_LIMITATIONS.md` §1–2.
+
+### 1.7 Checks against published Minecraft 1.21.11 data
+
+```
+$ python3 scripts/verify-minecraft-data.py
+dataset          : Minecraft 1.21.11 (protocol 774, release)
+exact version pin: 1.21.11 == 1.21.11 -> True
+  key.keyboard.right.shift   -> 'Right Shift' OK
+  key.keyboard.f30           -> None (absent, as required)
+our keys vs vanilla: 194 namespaced keys, 0 collision(s)
+RESULT: PASS
+
+$ python3 scripts/verify-fabric-api-surface.py
+Fabric types imported by the mod: 9   (all OK)
+RESULT: PASS
+```
+
+The dataset is `minecraft-data` 3.119.0 (`data/pc/1.21.11`, 7 767 language
+entries). The Fabric check compares the 9 imported types against an index in
+`tools/fabric-api-surface.json`; that index is maintained by hand because
+`maven.fabricmc.net` is unreachable, and it says so in its own `verified: false`.
+
 ## 2. Verified by inspection only (not compiled)
 
 The 16 files under `src/main/java/dev/chatmacro/studio/client/`. Two checks were

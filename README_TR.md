@@ -176,6 +176,8 @@ src/test/java/dev/chatmacro/studio/  114 test, bağımlılıksız çalıştırı
 scripts/                             sürüm eşitleme, wrapper kontrolü, test çalıştırıcı
 tools/offline-javac/                 testleri çevrimdışı çalıştıran araç
 tools/ui-preview/, ui-preview/       gerçek paletle çizilmiş önizleme PNG'leri
+tools/real-javac/                    JDK olmadan derlemek için gerçek javac 23 (wasm)
+dist/core/                          bunun ürettiği çekirdek JAR (kurulabilir mod değil)
 docs/config-schema.md
 BUILD.md, TEST_REPORT.md, KNOWN_LIMITATIONS.md, THIRD_PARTY_NOTICES.md
 ```

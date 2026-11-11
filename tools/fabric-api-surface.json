@@ -1,0 +1,43 @@
+{
+  "target": "Fabric API for Minecraft 1.21.11 (fabric-api line, module names stable since 1.19)",
+  "source": "Module names and class names taken from the Fabric API module layout (fabric-command-api-v2, fabric-lifecycle-events-v1, fabric-key-binding-api-v1, fabric-networking-api-v1). The class index itself lives on maven.fabricmc.net, which this environment cannot reach, so entries are recorded here rather than fetched.",
+  "verified": false,
+  "types": {
+    "net.fabricmc.api.ClientModInitializer": {
+      "module": "fabric-loader",
+      "since": "1.0"
+    },
+    "net.fabricmc.loader.api.FabricLoader": {
+      "module": "fabric-loader",
+      "since": "1.0"
+    },
+    "net.fabricmc.fabric.api.client.command.v2.ClientCommandManager": {
+      "module": "fabric-command-api-v2",
+      "since": "1.19"
+    },
+    "net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback": {
+      "module": "fabric-command-api-v2",
+      "since": "1.19"
+    },
+    "net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource": {
+      "module": "fabric-command-api-v2",
+      "since": "1.19"
+    },
+    "net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents": {
+      "module": "fabric-lifecycle-events-v1",
+      "since": "1.14"
+    },
+    "net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents": {
+      "module": "fabric-lifecycle-events-v1",
+      "since": "1.14"
+    },
+    "net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper": {
+      "module": "fabric-key-binding-api-v1",
+      "since": "1.14"
+    },
+    "net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents": {
+      "module": "fabric-networking-api-v1",
+      "since": "1.14"
+    }
+  }
+}

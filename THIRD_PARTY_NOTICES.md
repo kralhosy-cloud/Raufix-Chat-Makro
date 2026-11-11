@@ -65,3 +65,25 @@ how to install the official, checksum-verified wrapper.
 * no obfuscation, string encryption or packer;
 * no copied branding, logos or assets from Mojang, Microsoft or any server
   network.
+
+## Build-time toolchain (not shipped in the mod jar)
+
+These are used by `tools/fetch-javac-toolchain.sh` / `scripts/build-jar.sh` and
+are **not** inside `dist/core/chat-macro-studio-1.0.0-core.jar`. They are fetched
+on demand and are excluded from version control.
+
+| Component | Version | Licence | Source |
+| --- | --- | --- | --- |
+| TraceJVM (`@tracecode/tracejvm`) | 0.4.1 | **AGPL-3.0-or-later** | npm, `releaseId tracejvm@0.4.1+sha256.446bd4e38f2abcb497c8b52954e791ced91f694c21ecf992db990597e9b21dd8` |
+| TeaVM-javac / OpenJDK javac inside it | OpenJDK 23.0.2+7 (javac commit `7e4a44cf521694a4e326e33850dd8aec165eb5c9`) | GPL-2.0 **with Classpath Exception** | bundled in the same package, `legal/OPENJDK-COMPILER-*` |
+| `effect` | 3.22.0 | MIT | npm, a TraceJVM runtime dependency |
+| `tar-stream` | 3.2.0 | MIT | npm, a TraceJVM runtime dependency |
+| JDK 23 image (`jdk23.jar`) | Temurin 23.0.2+7 | GPL-2.0 with Classpath Exception | shipped inside the TraceJVM runtime archive |
+
+**AGPL note.** TraceJVM is AGPL-3.0-or-later. It is used here only as a local
+build tool that produces `.class` files; nothing from it is linked into or
+redistributed with the mod, and the mod's own sources stay MIT. If you vendor
+this into a distributed build service, review that licence yourself.
+
+Two earlier, unrelated assets are still recorded below for completeness.
+

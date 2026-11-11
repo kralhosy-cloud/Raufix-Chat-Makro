@@ -173,6 +173,8 @@ src/test/java/dev/chatmacro/studio/  114 tests, dependency-free runner
 scripts/                             sync-versions, wrapper check, test runner
 tools/offline-javac/                 the harness used to run the tests offline
 tools/ui-preview/, ui-preview/       off-line preview renders (not screenshots)
+tools/real-javac/                    a real javac 23 (wasm) so the jar can be built without a JDK
+dist/core/                          the core-only jar this produces (not an installable mod)
 docs/config-schema.md
 BUILD.md, TEST_REPORT.md, KNOWN_LIMITATIONS.md, THIRD_PARTY_NOTICES.md
 ```

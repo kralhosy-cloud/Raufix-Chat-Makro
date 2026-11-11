@@ -12,14 +12,25 @@ number is given, it came from a command in this repository.
 bindings, commands, session bridge, dispatch adapter and entry point) have never
 been through a compiler that could see `net.minecraft.*` or `net.fabricmc.*`.
 
-Measured, not estimated:
+Measured three ways, not estimated:
 
 ```
 $ JW_ASSETS=... node tools/offline-javac/jw.mjs check src/main/java
 # sources=57 diagnostics=100 errors=100 compileOk=false
+
+$ node tools/real-javac/compile.mjs --out /tmp/x --platform tools/real-javac/runtime/jdk23.jar src/main/java
+src13/.../MacroEditorPanel.java:55: error: cannot find symbol
+  symbol:   class ButtonWidget
+# sources=57 errors=100 status=compile-error
+
+$ node tools/real-javac/compile.mjs --out build/classes --platform tools/real-javac/runtime/jdk23.jar \
+      --exclude "/client/" src/main/java
+# sources=42 excluded=15 errors=0 status=completed
 ```
 
-All 100 diagnostics are missing platform types — `package net.minecraft.client
+The second command is the real OpenJDK 23 `javac` (TraceJVM), not the older
+TeaVM harness, and it agrees: the core compiles clean, the client layer cannot
+see its platform. All diagnostics are missing platform types — `package net.minecraft.client
 does not exist`, `package net.fabricmc.fabric.api.* does not exist`,
 `cannot find symbol: class DrawContext`, and so on. None of them is a logic
 error the harness could have found. The same command with `--exclude "/client/"`
@@ -48,23 +59,24 @@ build. The most likely places, in order:
    with `CommandDispatcher<FabricClientCommandSource>` and
    `net.minecraft.command.CommandBuildContext`.
 
-## 2. No build was run, so there is no jar
+## 2. `./gradlew build` was never run; the jar that exists is a core-only jar
 
-* `./gradlew build` — never run. No JDK with `javac` existed in the authoring
-  environment, no Gradle distribution could be downloaded
-  (`services.gradle.org` unreachable) and Maven Central, `maven.fabricmc.net`
-  and `libraries.minecraft.net` were all unreachable.
-* **There is no `build/libs/` directory and no jar.** No SHA-256 or file size is
-  quoted anywhere in this repository, because there is no artefact to quote.
-* `gradle/wrapper/gradle-wrapper.jar` is absent on purpose. It is a binary that
-  could not be fetched, and a fabricated wrapper jar would be worse than a
-  missing one. `BUILD.md` gives the two commands that install the official one
-  and pin its checksum.
-* A clean-checkout rebuild was **not** attempted, for the same reason.
-* Three version values in `gradle.properties` are marked `UNVERIFIED`
-  (`yarn_mappings`, `loom_version`, `fabric_version`) because
-  `meta.fabricmc.net` was unreachable. `fabric_version=0.0.0+1.21.11` is a
-  placeholder that **will not resolve**; run `scripts/sync-versions.sh` first.
+No Gradle, no Loom, no reachable Minecraft/Fabric artifacts, so the normal build
+never ran. What *was* run (see `JAR.md`):
+
+* a real `javac` (OpenJDK 23.0.2+7 via TraceJVM, WebAssembly build) compiled the
+  42 platform-free sources to **71 class files**;
+* the 114-test suite ran **on a stock JVM against those class files** (not against
+  an interpreter) and passed;
+* those classes were packed into `dist/core/chat-macro-studio-1.0.0-core.jar`
+  (129 KB, sha256 in the adjacent `.build.json`), and a stock JVM loads classes
+  out of it.
+
+That jar has **no Fabric entrypoint and cannot be installed as a mod**, because
+the 15 `client.**` sources need the Fabric API and Minecraft classes that this
+environment cannot obtain. It is labelled as such in its own `fabric.mod.json`.
+A remapped, installable production jar still requires `./gradlew build` =
+**not produced**.
 
 ## 3. Loader 0.19.3 is not a stable release
 
