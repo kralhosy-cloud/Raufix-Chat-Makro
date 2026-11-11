@@ -41,7 +41,10 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
 
       - name: Compile with Loom (this is where client.** is compiled for real)
-        run: ./gradlew --no-daemon --stacktrace build 2>&1 | tee gradle-build.log
+        shell: bash
+        run: |
+          set -o pipefail   # a failing gradlew must fail the step, even through tee
+          ./gradlew --no-daemon --stacktrace build 2>&1 | tee gradle-build.log
 
       - name: Summarise the Gradle log in the job summary
         if: always()
