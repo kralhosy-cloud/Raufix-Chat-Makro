@@ -185,3 +185,24 @@ tokens, virtual list, animation — compile with zero diagnostics under a real
 OpenJDK 21 javac and are covered by 112 passing tests, including the
 cross-profile isolation regressions and the wall-clock regression. Those tests
 really ran; the command and full output are in `TEST_REPORT.md`.
+
+## 11. Tools that were requested and could not be installed
+
+Every entry below was probed from this environment, not assumed:
+
+| Tool | What happened |
+| --- | --- |
+| JetBrains Runtime (DCEVM, `-XX:+AllowEnhancedClassRedefinition`) + HotswapAgent | `cache-redirector.jetbrains.com` and `download.jetbrains.com` both return no connection (`000`). Even with the binary, hot-swapping needs a **running** game JVM with real `.class` files, Mixin applied and a display — none of which exists here. |
+| Mill | no reachable distribution (its Maven/Releases hosts are blocked). |
+| `javac` / Gradle | not present; `services.gradle.org`, `maven.fabricmc.net`, `repo1.maven.org`, `libraries.minecraft.net` are all unreachable, so the Fabric Loom build cannot resolve anything. `apt-get` is permission-denied. |
+| ECJ (`ecj.jar`) | not on PyPI (`ecj`, `eclipse-jdt` → no distribution); GitHub release assets are blocked (`objects.githubusercontent.com` → `000`). |
+| PMD | `repo1.maven.org` download → `000`; no PyPI package. |
+| Qodana CLI | `download.jetbrains.com` → `000`. |
+| SpotBugs | needs compiled `.class`/`.jar` files, which no available compiler can produce. |
+
+**What did run instead:** Semgrep 1.185.0 on the `.java` sources (18 project rules,
+0 findings after the fixes), `javalang` 0.13.0 as an independent Java parser, the
+TeaVM javac harness for the Minecraft-free core (55 sources, 114 tests), and the
+off-line UI renderer described in section 4. Those are real executions, listed
+with their real limits — they are not substitutes for PMD/Qodana/SpotBugs, and no
+report here claims otherwise.

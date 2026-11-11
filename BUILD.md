@@ -106,3 +106,26 @@ A clean-checkout rebuild was **not** possible in the authoring environment and
 has not been attempted. Reason: no JDK with `javac`, no Gradle distribution and
 no reachable Maven Central, Fabric or Mojang hosts. See `KNOWN_LIMITATIONS.md`
 for exactly what was and was not executed.
+
+## Tools this build was measured with, and the ones it could not have
+
+`./gradlew build` needs Gradle, `javac`, Fabric Loom and the Minecraft artifacts.
+None of them are reachable from the environment this repository was written in
+(`services.gradle.org`, `maven.fabricmc.net`, `libraries.minecraft.net`,
+`repo1.maven.org` all return no connection), so **no Gradle build was executed
+here** — see `KNOWN_LIMITATIONS.md` §1, §2 and §11.
+
+The checks that *did* run against this tree:
+
+```bash
+JW_ASSETS=... ./scripts/run-offline-tests.sh     # 114 tests, Minecraft-free core
+python3 scripts/check-languages.py                # 194 keys, parity + placeholders
+SEMGREP=.venv/bin/semgrep ./scripts/run-lint.sh  # 18 project rules, 0 findings
+python3 scripts/render-ui-preview.sh             # off-line UI renders
+./scripts/package-source.sh                      # dist/ source ZIP + sha256
+```
+
+PMD, Qodana, SpotBugs, Mill, ECJ and the JetBrains DCEVM runtime were requested by
+the user and are **not installed**: their download hosts are blocked here and
+SpotBugs additionally needs compiled bytecode that no available compiler can
+produce. Do not describe those tools as having run against this code.
