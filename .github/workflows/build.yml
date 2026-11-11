@@ -68,28 +68,32 @@ jobs:
           path: gradle-build.log
           if-no-files-found: warn
 
-      # The jar is the deliverable. Committing it back to a dedicated branch makes
-      # it reachable from environments that cannot download Actions artifacts.
+      # The jar is the deliverable. Publish it to a dedicated branch so it is
+      # reachable from environments that cannot download Actions artifacts.
+      # A fresh worktree is used instead of mutating the checked-out tree: the
+      # earlier version of this step did `git rm -rf --cached .` and left the
+      # repository in a state where the publish itself failed.
       - name: Publish the built jar to the ci-artifacts branch
         if: always()
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -eu
+          PUB="$RUNNER_TEMP/pub"
+          rm -rf "$PUB"
+          mkdir -p "$PUB"
+          cp gradle-build.log "$PUB"/ 2>/dev/null || echo '(no gradle log)' > "$PUB/gradle-build.log"
+          [ -d build/libs ] && find build/libs -name '*.jar' -exec cp {} "$PUB"/ \; || true
+          ( cd "$PUB" && sha256sum * > SHA256SUMS.txt 2>/dev/null || true )
+          echo "--- publishing:"
+          ls -l "$PUB"
+          cd "$PUB"
+          git init -q -b ci-artifacts .
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
-          mkdir -p /tmp/pub
-          cp gradle-build.log /tmp/pub/ 2>/dev/null || true
-          find build/libs -name '*.jar' -exec cp {} /tmp/pub/ \; 2>/dev/null || true
-          ls -l build/libs /tmp/pub || true
-          ( cd /tmp/pub && sha256sum * > SHA256SUMS.txt 2>/dev/null || true )
-          git checkout --orphan ci-artifacts-tmp 2>/dev/null || git checkout -B ci-artifacts-tmp
-          git rm -rf --cached . >/dev/null 2>&1 || true
-          rm -rf ./* 2>/dev/null || true
-          cp -r /tmp/pub/. . 2>/dev/null || true
           git add -A
-          git commit -m "build ${GITHUB_SHA:0:7}: artifacts from ${{ github.workflow }}" || echo 'nothing to commit'
-          git push -f "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:ci-artifacts
+          git commit -q -m "build ${GITHUB_SHA:0:7}: artifacts" || echo 'nothing to commit'
+          git push -f "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" ci-artifacts:ci-artifacts
 
       - name: List produced artifacts
         if: always()
