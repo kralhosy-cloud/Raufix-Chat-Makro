@@ -33,10 +33,14 @@ jobs:
           grep -E '^(minecraft_version|loader_version|yarn_mappings|fabric_version|loom_version)' gradle.properties
           cat gradle/wrapper/gradle-wrapper.properties
 
+      # The build JVM has to be Java 25: Loom 1.20.0-alpha.27 refuses to load on
+      # anything older. The produced bytecode is still Java 21 unless
+      # gradle.properties' java_version says otherwise.
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '21'
+          java-version: '25'
+          java-package: jdk
 
       - uses: gradle/actions/setup-gradle@v4
 
