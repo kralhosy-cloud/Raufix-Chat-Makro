@@ -39,7 +39,29 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
 
       - name: Compile with Loom (this is where client.** is compiled for real)
-        run: ./gradlew --no-daemon build
+        run: ./gradlew --no-daemon --stacktrace build 2>&1 | tee gradle-build.log
+
+      - name: Summarise the Gradle log in the job summary
+        if: always()
+        run: |
+          {
+            echo '### gradle-build.log (tail)'
+            echo '```'
+            tail -n 120 gradle-build.log 2>/dev/null || echo '(no log)'
+            echo '```'
+            echo '### first errors'
+            echo '```'
+            grep -nE "^(FAILURE|\* What went wrong|Caused by|> Could not|> A problem|error:)" -A4 gradle-build.log 2>/dev/null | head -n 120 || true
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Publish the Gradle log as an artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gradle-build-log
+          path: gradle-build.log
+          if-no-files-found: warn
 
       - name: List produced artifacts
         if: always()
