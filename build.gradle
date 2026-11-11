@@ -1,0 +1,88 @@
+plugins {
+    id 'fabric-loom' version "${loom_version}"
+    id 'java'
+}
+
+version = project.mod_version
+group = project.maven_group
+
+base {
+    archivesName = project.archives_base_name
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Minecraft + mappings.  Yarn mappings only - no Mojang mappings are mixed
+    // in anywhere in this project, so every source file uses Yarn names
+    // (MinecraftClient, DrawContext, KeyBinding, Text, Screen, ...).
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+
+    // Pinned exactly to the loader version requested for this deliverable.
+    // The build is tested against this version and nothing else.
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+
+    // Fabric API - used for client tick, key bindings, client commands and
+    // connection lifecycle events.
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+}
+
+java {
+    // Java 21 toolchain, matching the Minecraft 1.21.x requirement.
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(project.java_version as int)
+    }
+    withSourcesJar()
+}
+
+processResources {
+    inputs.property 'version', project.version
+    inputs.property 'loader_version', project.loader_version
+    inputs.property 'minecraft_version', project.minecraft_version
+    filesMatching('fabric.mod.json') {
+        expand(
+            'version': project.version,
+            'loader_version': project.loader_version,
+            'minecraft_version': project.minecraft_version
+        )
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.release = project.java_version as int
+    it.options.encoding = 'UTF-8'
+}
+
+jar {
+    from('LICENSE') {
+        rename { "${it}_${project.archives_base_name}" }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Tests
+// ---------------------------------------------------------------------------
+// The suites under src/test/java are dependency-free executable suites
+// (dev.chatmacro.studio.testing.TestMain).  They exist because JUnit could not
+// be resolved in the offline environment where this project was authored; the
+// runner is real code that really executes the suites and really exits non-zero
+// on failure.  `./gradlew offlineTests` is the project's test task.
+tasks.register('offlineTests', JavaExec) {
+    group = 'verification'
+    description = 'Runs the dependency-free Chat Macro Studio test suites.'
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'dev.chatmacro.studio.testing.TestMain'
+}
+
+tasks.named('test') {
+    // No JUnit dependency is declared, so Gradle's own test task has nothing to
+    // discover.  `check` runs offlineTests instead.
+    enabled = false
+}
+
+tasks.named('check') {
+    dependsOn 'offlineTests'
+}

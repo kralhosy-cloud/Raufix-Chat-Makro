@@ -1,0 +1,217 @@
+# Chat Macro Studio - offline Semgrep ruleset
+#
+# Semgrep's registry (semgrep.dev) is unreachable from this environment, so
+# these rules are local and versioned with the project. They target the bug
+# classes that actually matter here and that a compiler cannot see:
+#
+#   * the Turkish-locale string bug (toLowerCase() with no Locale)
+#   * resource leaks (streams / readers not in try-with-resources)
+#   * swallowed exceptions and empty catch blocks
+#   * null-returning Minecraft singletons dereferenced without a guard
+#   * identity comparison of Strings and boxed values
+#   * printStackTrace / System.exit / mutable public statics
+#   * wall-clock time in the scheduler (must use the injected Clock)
+#
+# Run: semgrep --config tools/semgrep/chatmacro-studio.yml src/main/java
+
+rules:
+  - id: cms-tolowercase-without-locale
+    languages: [java]
+    severity: ERROR
+    message: >-
+      toLowerCase() without an explicit Locale. This mod runs in Turkish, where
+      "I".toLowerCase() yields "ı" (dotless) and silently breaks key lookups and
+      command-name matching. Use toLowerCase(Locale.ROOT).
+    patterns:
+      - pattern: $X.toLowerCase()
+
+  - id: cms-touppercase-without-locale
+    languages: [java]
+    severity: ERROR
+    message: >-
+      toUpperCase() without an explicit Locale. In a Turkish locale "i" maps to
+      "İ". Use toUpperCase(Locale.ROOT).
+    patterns:
+      - pattern: $X.toUpperCase()
+
+  - id: cms-string-format-without-locale
+    languages: [java]
+    severity: WARNING
+    message: >-
+      String.format without a Locale uses the platform default, which changes
+      decimal separators between machines. Pass Locale.ROOT.
+    patterns:
+      - pattern: String.format("...", ...)
+
+  - id: cms-printstacktrace
+    languages: [java]
+    severity: ERROR
+    message: >-
+      printStackTrace bypasses the logger and can print message bodies into the
+      log, which this mod promises never to do. Use the SLF4J logger with the
+      exception object.
+    pattern: $E.printStackTrace()
+
+  - id: cms-system-exit
+    languages: [java]
+    severity: ERROR
+    message: >-
+      System.exit must not appear in a mod: it kills the game process. Throw or
+      report instead.
+    pattern: System.exit(...)
+
+  - id: cms-empty-catch
+    languages: [java]
+    severity: WARNING
+    message: >-
+      Empty catch block swallows a failure. Either report it through the
+      listener/log or state in a comment why it is safe to ignore.
+    pattern-regex: "catch\\s*\\([^)]*\\)\\s*\\{\\s*\\}"
+
+  - id: cms-catch-throwable
+    languages: [java]
+    severity: WARNING
+    message: >-
+      Catching Throwable also catches OutOfMemoryError and StackOverflowError.
+      Catch Exception unless the comment explains why that is deliberate.
+    pattern-either:
+      - pattern: |
+          catch (Throwable $VAR) { ... }
+
+  - id: cms-wallclock-in-scheduler
+    languages: [java]
+    severity: ERROR
+    message: >-
+      The scheduler must use the injected Clock (monotonic). System.currentTimeMillis
+      or System.nanoTime here would reintroduce the wall-clock jump bug that the
+      suite has a regression test for.
+    paths:
+      include:
+        - "*/sched/*"
+      exclude:
+        - "*/sched/Clock.java"
+    pattern-either:
+      - pattern: System.currentTimeMillis()
+      - pattern: System.nanoTime()
+
+  - id: cms-string-identity-comparison
+    languages: [java]
+    severity: ERROR
+    message: >-
+      Strings compared with == / != instead of equals(). Translation keys and
+      command roots are interned inconsistently, so this passes in tests and
+      fails at runtime.
+    pattern-either:
+      - patterns:
+          - pattern-either:
+              - pattern: $A == $B
+              - pattern: $A != $B
+          - pattern-not: $A == null
+          - pattern-not: $A != null
+          - pattern-not: null == $B
+          - pattern-not: null != $B
+          # enum constants are compared with == on purpose
+          - pattern-not: $A == $ENUM.$CONST
+          - pattern-not: $A != $ENUM.$CONST
+          - metavariable-regex:
+              metavariable: $A
+              # anchored: "keyCode" / "scanCode" are ints, not key strings
+              regex: .*([Kk]ey|[Nn]ame|[Cc]ontent|[Aa]ddress|[Ss]lug|message)$
+
+  - id: cms-minecraft-singleton-unguarded
+    languages: [java]
+    severity: INFO
+    message: >-
+      MinecraftClient.getInstance() can be null during startup and shutdown.
+      Assign it to a local, null-check it, then use it.
+    pattern: MinecraftClient.getInstance().$FIELD
+
+  - id: cms-player-deref-unguarded
+    languages: [java]
+    severity: INFO
+    message: >-
+      client.player is null outside a world. Every dereference must be inside a
+      null check (informational: review each hit by hand).
+    patterns:
+      - pattern: $CLIENT.player.$METHOD(...)
+      - pattern-not-inside: |
+          if ($CLIENT.player != null) {
+            ...
+          }
+      - pattern-not: $CLIENT.player != null
+
+  - id: cms-public-mutable-static
+    languages: [java]
+    severity: WARNING
+    message: >-
+      Public non-final static field is mutable global state shared across
+      screens and ticks. Make it final or encapsulate it.
+    pattern: public static $TYPE $FIELD;
+
+  - id: cms-new-random-per-use
+    languages: [java]
+    severity: WARNING
+    message: >-
+      Creating a Random per call gives correlated sequences and is a needless
+      allocation in a per-frame path.
+    pattern: new Random(...)
+
+  - id: cms-files-newstream-not-trywith
+    languages: [java]
+    severity: ERROR
+    message: >-
+      Files.list/Files.walk/Files.lines returns a Stream that holds a directory
+      handle. It must be in a try-with-resources or it leaks a file descriptor.
+    patterns:
+      - pattern-either:
+          - pattern: Files.list($P)
+          - pattern: Files.walk($P)
+          - pattern: Files.lines($P)
+      - pattern-not-inside: try ($R) { ... }
+
+  - id: cms-inputstream-not-trywith
+    languages: [java]
+    severity: ERROR
+    message: >-
+      An InputStream opened outside try-with-resources leaks on the exception
+      path. This is the classic resource leak SpotBugs looks for.
+    patterns:
+      - pattern-either:
+          - pattern: Files.newInputStream($P)
+          - pattern: new FileInputStream($P)
+      - pattern-not-inside: try ($R) { ... }
+
+  - id: cms-thread-in-mod
+    languages: [java]
+    severity: ERROR
+    message: >-
+      No thread or Timer may be started for scheduling: the scheduler is
+      client-tick driven by design, and a stray thread would keep sending after
+      a disconnect.
+    pattern-either:
+      - pattern: new Thread(...)
+      - pattern: new Timer(...)
+      - pattern: Executors.new$KIND(...)
+
+  - id: cms-send-packet-directly
+    languages: [java]
+    severity: ERROR
+    message: >-
+      Direct packet sending is forbidden by this mod's contract: every message
+      must go through the client's own chat path.
+    pattern-either:
+      - pattern: $H.sendPacket(...)
+      - pattern: $H.sendChatMessageSigned(...)
+      - pattern: $P.sendCommand(...)
+
+  - id: cms-swallowed-ioexception-returns-null
+    languages: [java]
+    severity: WARNING
+    message: >-
+      Returning null after swallowing an IOException turns a diagnosable failure
+      into a NullPointerException later. Return an explicit failure result.
+    pattern: |
+      catch (IOException $E) {
+        ...
+        return null;
+      }

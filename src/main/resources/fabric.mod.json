@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "chatmacro_studio",
+  "version": "${version}",
+  "name": "Chat Macro Studio",
+  "description": "Profile-based chat macro manager for single player, your own server, or servers that allow automation. Sends through the normal client chat path, never starts without an explicit start, and never bypasses server anti-spam.",
+  "authors": [
+    "kralhosy-cloud"
+  ],
+  "contact": {
+    "sources": "https://github.com/kralhosy-cloud/Raufix-Chat-Makro"
+  },
+  "license": "MIT",
+  "icon": "assets/chatmacro_studio/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "dev.chatmacro.studio.client.ChatMacroStudioClient"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric-api": "*",
+    "minecraft": "${minecraft_version}",
+    "java": ">=21"
+  }
+}
