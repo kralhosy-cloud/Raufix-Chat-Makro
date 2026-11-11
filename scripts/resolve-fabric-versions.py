@@ -118,7 +118,8 @@ def main() -> int:
     # --- loom ----------------------------------------------------------------
     loom_versions: list[str] = []
     try:
-        loom_versions = maven_versions("net/fabricmc", "fabric-loom")
+        loom_versions = [v for v in maven_versions("net/fabricmc", "fabric-loom")
+                         if not v.endswith("-SNAPSHOT") and "SNAPSHOT" not in v]
     except Exception as exc:  # noqa: BLE001
         failures.append(f"fabric-loom: {exc}")
 
@@ -126,6 +127,10 @@ def main() -> int:
         print("\ncould not resolve:", file=sys.stderr)
         for failure in failures:
             print(f"  - {failure}", file=sys.stderr)
+        return 1
+
+    if not loom_versions:
+        failures.append("fabric-loom: no non-snapshot release version found")
         return 1
 
     resolved = {
