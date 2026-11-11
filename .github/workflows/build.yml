@@ -50,27 +50,43 @@ jobs:
           set -o pipefail   # a failing gradlew must fail the step, even through tee
           ./gradlew --no-daemon --stacktrace build 2>&1 | tee gradle-build.log
 
-      # Read the REAL yarn-mapped API from the jar Loom just downloaded, instead
-      # of guessing signatures. Output goes into the build log we publish.
+      # Read the REAL yarn-mapped API from the jar Loom just downloaded/remapped,
+      # instead of guessing signatures. Nothing here is allowed to fail the job:
+      # `set +e` on purpose, because `ls` on a missing path under `-e -o pipefail`
+      # is what killed the first version of this step before it wrote a byte.
       - name: Probe the mapped Minecraft API (javap)
         if: always()
         shell: bash
         run: |
-          set -u
+          set +e
           out=api-probe.log
-          jar=$(ls .gradle/loom-cache/minecraftMaven/net/minecraft/minecraft-*/*/*-merged.jar 2>/dev/null | head -1)
-          echo "jar=$jar" | tee "$out"
-          if [ -z "${jar:-}" ]; then
-            find .gradle -name '*minecraft*jar' | head -20 | tee -a "$out"; exit 0
+          : > "$out"
+          echo "== candidate jars in the loom cache ==" >> "$out"
+          find .gradle -name '*.jar' 2>/dev/null | grep -iE 'minecraft|merged|named' | head -30 >> "$out"
+          jar=$(find .gradle -path '*minecraft*' -name '*merged*.jar' 2>/dev/null | head -1)
+          [ -z "$jar" ] && jar=$(find .gradle -path '*minecraft*' -name '*.jar' 2>/dev/null | grep -v sources | head -1)
+          echo "== using: $jar ==" >> "$out"
+          if [ ! -f "$jar" ]; then
+            echo "no jar found; full cache listing:" >> "$out"
+            find .gradle -maxdepth 4 -type d -name '*loom*' >> "$out" 2>/dev/null
+            exit 0
           fi
-          unzip -l "$jar" | grep -c class | tee -a "$out"
-          for cls in net/minecraft/client/gui/Screen net/minecraft/client/gui/Element \
-                     net/minecraft/client/gui/widget/ClickableWidget net/minecraft/client/gui/DrawContext \
-                     net/minecraft/client/option/KeyBinding net/minecraft/command/CommandRegistryAccess; do
-            { echo "===== $cls"; javap -classpath "$jar" "${cls//\//.}" 2>&1 | head -60; } >> "$out"
+          for cls in \
+            net.minecraft.client.gui.Screen \
+            net.minecraft.client.gui.Element \
+            net.minecraft.client.gui.ParentElement \
+            net.minecraft.client.gui.widget.ClickableWidget \
+            net.minecraft.client.gui.DrawContext \
+            net.minecraft.client.option.KeyBinding \
+            net.minecraft.command.CommandBuildContext \
+            net.minecraft.client.network.ClientPlayNetworkHandler \
+            net.minecraft.client.MinecraftClient ; do
+            { echo "########## $cls"; javap -classpath "$jar" "$cls" 2>&1; echo; } >> "$out"
           done
-          echo '--- inner types of KeyBinding/screen input ---' >> "$out"
-          grep -E '^\s+(public|protected).*\(' "$out" | grep -iE 'mouseClicked|keyPressed|drawBorder|Category|DrawContext' | head -40 >> "$out"
+          echo "########## nested/related types actually present in the jar" >> "$out"
+          unzip -l "$jar" 2>/dev/null | grep -oE 'net/minecraft/(client/gui/[A-Za-z]+|client/option/KeyBinding[^ ]*|command/[A-Za-z]+|screen/[A-Za-z]+)\.class' \
+            | sort -u | head -80 >> "$out"
+          exit 0
 
       - name: Summarise the Gradle log in the job summary
         if: always()
